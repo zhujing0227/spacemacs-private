@@ -101,7 +101,7 @@
             '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
       (setq org-agenda-inhibit-startup t) ;; ~50x speedup
-      (setq org-agenda-span 'day)
+      (setq org-agenda-span 7)
       (setq org-agenda-use-tag-inheritance nil) ;; 3-4x speedup
       (setq org-agenda-window-setup 'current-window)
       (setq org-log-done t)
@@ -313,34 +313,38 @@
           "." 'spacemacs/org-agenda-transient-state/body)
         )
       ;; the %i would copy the selected text into the template
+      ;; http://members.optusnet.com.au/~charles57/GTD/datetree.html
       ;;http://www.howardism.org/Technical/Emacs/journaling-org.html
       ;;add multi-file journal
       (setq org-capture-templates
-            '(("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
-               "* TODO [#B] %?\n  %i\n %U"
+            '(("H" "HomeWork" entry (file+headline org-agenda-file-gtd "HomeWork")
+               "* TODO %?\n  %i\n %U"
                :empty-lines 1)
-              ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
-               "* %?\n  %i\n %U"
-               :empty-lines 1)
-              ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
-               "* TODO [#B] %?\n  %i\n %U"
-               :empty-lines 1)
-              ("s" "Code Snippet" entry
-               (file org-agenda-file-code-snippet)
-               "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
-              ("w" "work" entry (file+headline org-agenda-file-gtd "Work")
-               "* TODO [#A] %?\n  %i\n %U"
-               :empty-lines 1)
-              ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
-               "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
-               :empty-lines 1)
-              ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
-               "* TODO [#C] %?\n  %i\n %a \n %U"
-               :empty-lines 1)
-              ("j" "Journal Entry"
-               entry (file+datetree org-agenda-file-journal)
-               "* %?"
-               :empty-lines 1)))
+               ("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
+                "* TODO [#B] %?\n  %i\n %U"
+                :empty-lines 1)
+               ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
+                "* %?\n  %i\n %U"
+                :empty-lines 1)
+               ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
+                "* TODO [#B] %?\n  %i\n %U"
+                :empty-lines 1)
+               ("s" "Code Snippet" entry
+                (file org-agenda-file-code-snippet)
+                "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
+               ("w" "work" entry (file+headline org-agenda-file-gtd "Work")
+                "* TODO [#A] %?\n  %i\n %U"
+                :empty-lines 1)
+               ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
+                "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
+                :empty-lines 1)
+               ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
+                "* TODO [#C] %?\n  %i\n %a \n %U"
+                :empty-lines 1)
+               ("j" "Journal Entry"
+                entry (file+datetree org-agenda-file-journal)
+                "* %?"
+                :empty-lines 1)))
 
       (with-eval-after-load 'org-capture
         (defun org-hugo-new-subtree-post-capture-template ()
@@ -369,6 +373,7 @@ See `org-capture-templates' for more information."
 
       ;;An entry without a cookie is treated just like priority ' B '.
       ;;So when create new task, they are default 重要且紧急
+      ;; https://orgmode.org/worg/org-tutorials/org-custom-agenda-commands.html
       (setq org-agenda-custom-commands
             '(
               ("w" . "任务安排")
@@ -377,17 +382,18 @@ See `org-capture-templates' for more information."
               ("wc" "不重要且紧急的任务" tags-todo "+PRIORITY=\"C\"")
               ("b" "Blog" tags-todo "BLOG")
               ("p" . "项目安排")
-              ("pw" tags-todo "PROJECT+WORK+CATEGORY=\"work\"")
-              ("pl" tags-todo "PROJECT+DREAM+CATEGORY=\"zilongshanren\"")
+              ("pw" tags-todo "PROJECT+WORK+CATEGORY=\"Work\"")
+              ("pl" tags-todo "PROJECT+DREAM+CATEGORY=\"Zhujing\"")
               ("W" "Weekly Review"
-               ((stuck "") ;; review stuck projects as designated by org-stuck-projects
+               ((agenda "" ((org-agenda-span 7))) ;; review upcoming deadlines and appointments, type "l" in the agenda to review logged items
+                (stuck "") ;; review stuck projects as designated by org-stuck-projects
                 (tags-todo "PROJECT") ;; review all projects (assuming you use todo keywords to designate projects)
                 ))))
 
       (defvar zilongshanren-website-html-preamble
         "<div class='nav'>
 <ul>
-<li><a href='http://zilongshanren.com'>博客</a></li>
+<li><a href='http://zhujing0227.github.io'>博客</a></li>
 <li><a href='/index.html'>Wiki目录</a></li>
 </ul>
 </div>")
@@ -410,8 +416,8 @@ See `org-capture-templates' for more information."
                :exclude-tags ("ol" "noexport")
                :section-numbers nil
                :html-preamble ,zilongshanren-website-html-preamble
-               :author "zilongshanren"
-               :email "guanghui8827@gmail.com"
+               :author "zhujing0227"
+               :email "zhujing0227@gmail.com"
                :auto-sitemap t          ; Generate sitemap.org automagically...
                :sitemap-filename "index.org" ; ... call it sitemap.org (it's the default)...
                :sitemap-title "我的wiki"     ; ... with title 'Sitemap'.
@@ -527,7 +533,7 @@ holding contextual information."
     :defer t))
 
 (defun zilongshanren-org/post-init-ox-reveal ()
-  (setq org-reveal-root "file:///Users/guanghui/.emacs.d/reveal-js"))
+  (setq org-reveal-root "file:///Users/zhuji/.emacs.d/reveal-js"))
 
 
 (defun zilongshanren-org/init-org-tree-slide ()
@@ -568,4 +574,15 @@ holding contextual information."
   (use-package sound-wav
     :defer t
     :init))
+
+(defun zilongshanren-org/init-bullets ()
+  (use-package org-bullets
+    :defer t
+    :init (add-hook 'org-mode-hook 'org-bullets-mode)))
+
+(defun zilongshanren-org/init-doom-modeline ()
+  (use-package doom-modeline
+    :ensure t
+    :init (add-hook 'doom-modeline-mode-hook 'doom-modeline-mode)
+    :hook (after-init . doom-modeline-mode)))
 ;;; packages.el ends here
