@@ -498,7 +498,6 @@ dump."
   )
 
 (defun dotspacemacs/user-init ()
-  ;; (doom-modeline-mode 1)
 
   (setq-default configuration-layer-elpa-archives
                 '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
