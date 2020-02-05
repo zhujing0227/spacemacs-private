@@ -585,5 +585,5 @@ holding contextual information."
   (use-package doom-modeline
     :ensure t
     :init (add-hook 'doom-modeline-mode-hook 'doom-modeline-mode)
-    :hook (after-init . doom-modeline-mode)))
+    ))
 ;;; packages.el ends here
