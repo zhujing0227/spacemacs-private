@@ -296,6 +296,7 @@
       (require 'ox-md nil t)
 
       ;; define the refile targets
+      (setq org-agenda-file-life (expand-file-name "life.org" org-agenda-dir))
       (setq org-agenda-file-note (expand-file-name "notes.org" org-agenda-dir))
       (setq org-agenda-file-gtd (expand-file-name "gtd.org" org-agenda-dir))
       (setq org-agenda-file-journal (expand-file-name "journal.org" org-agenda-dir))
@@ -317,7 +318,7 @@
       ;;http://www.howardism.org/Technical/Emacs/journaling-org.html
       ;;add multi-file journal
       (setq org-capture-templates
-            '(("H" "HomeWork" entry (file+headline org-agenda-file-gtd "HomeWork")
+            '(("H" "HomeWork" entry (file+headline org-agenda-file-life "HomeWork")
                "* TODO %?\n  %i\n %U"
                :empty-lines 1)
                ("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
