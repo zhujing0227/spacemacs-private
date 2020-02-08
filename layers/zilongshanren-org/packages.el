@@ -60,6 +60,8 @@
                         (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 
       (require 'org-tempo)
+      ;; https://emacs-china.org/t/topic/2367
+      (require 'ox-gfm nil t)
       ;; Allow multiple line Org emphasis markup.
       ;; http://emacs.stackexchange.com/a/13828/115
       (setcar (nthcdr 4 org-emphasis-regexp-components) 20) ;Up to 20 lines, default is just 1
@@ -104,7 +106,7 @@
       (setq org-agenda-span 7)
       (setq org-agenda-use-tag-inheritance nil) ;; 3-4x speedup
       (setq org-agenda-window-setup 'current-window)
-      (setq org-log-done t)
+      (setq org-log-done 'note)
 
       ;; 加密文章
       ;; "http://coldnew.github.io/blog/2013/07/13_5b094.html"
@@ -128,11 +130,13 @@
       ;; (add-to-list 'auto-mode-alist '("\.org\\'" . org-mode))
 
       (setq org-todo-keywords
-            (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
+            (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d@/!)")
                     (sequence "WAITING(w@/!)" "SOMEDAY(S)" "|" "CANCELLED(c@/!)" "MEETING(m)" "PHONE(p)"))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Org clock
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      (setq org-clock-persist 'history)
+      (org-clock-persistence-insinuate)
 
       ;; Change task state to STARTED when clocking in
       (setq org-clock-in-switch-to-state "STARTED")
@@ -321,31 +325,31 @@
             '(("H" "HomeWork" entry (file+headline org-agenda-file-life "HomeWork")
                "* TODO %?\n  %i\n %U"
                :empty-lines 1)
-               ("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
-                "* TODO [#B] %?\n  %i\n %U"
-                :empty-lines 1)
-               ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
-                "* %?\n  %i\n %U"
-                :empty-lines 1)
-               ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
-                "* TODO [#B] %?\n  %i\n %U"
-                :empty-lines 1)
-               ("s" "Code Snippet" entry
-                (file org-agenda-file-code-snippet)
-                "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
-               ("w" "work" entry (file+headline org-agenda-file-gtd "Work")
-                "* TODO [#A] %?\n  %i\n %U"
-                :empty-lines 1)
-               ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
-                "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
-                :empty-lines 1)
-               ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
-                "* TODO [#C] %?\n  %i\n %a \n %U"
-                :empty-lines 1)
-               ("j" "Journal Entry"
-                entry (file+datetree org-agenda-file-journal)
-                "* %?"
-                :empty-lines 1)))
+              ("t" "Todo" entry (file+headline org-agenda-file-gtd "Workspace")
+               "* TODO [#B] %?\n  %i\n %U"
+               :empty-lines 1)
+              ("n" "notes" entry (file+headline org-agenda-file-note "Quick notes")
+               "* %?\n  %i\n %U"
+               :empty-lines 1)
+              ("b" "Blog Ideas" entry (file+headline org-agenda-file-note "Blog Ideas")
+               "* TODO [#B] %?\n  %i\n %U"
+               :empty-lines 1)
+              ("s" "Code Snippet" entry
+               (file org-agenda-file-code-snippet)
+               "* %?\t%^g\n#+BEGIN_SRC %^{language}\n\n#+END_SRC")
+              ("w" "work" entry (file+headline org-agenda-file-gtd "Work")
+               "* TODO [#A] %?\n  %i\n %U"
+               :empty-lines 1)
+              ("c" "Chrome" entry (file+headline org-agenda-file-note "Quick notes")
+               "* TODO [#C] %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
+               :empty-lines 1)
+              ("l" "links" entry (file+headline org-agenda-file-note "Quick notes")
+               "* TODO [#C] %?\n  %i\n %a \n %U"
+               :empty-lines 1)
+              ("j" "Journal Entry"
+               entry (file+datetree org-agenda-file-journal)
+               "* %?"
+               :empty-lines 1)))
 
       (with-eval-after-load 'org-capture
         (defun org-hugo-new-subtree-post-capture-template ()

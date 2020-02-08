@@ -76,7 +76,8 @@ This function should only modify configuration layer settings."
      ;; docker
      latex
      deft
-     markdown
+     (markdown :variables
+               markdown-live-preview-engine 'vmd)
      (org :variables org-want-todo-bindings t
           org-enable-hugo-support t)
      gpu
@@ -106,6 +107,11 @@ This function should only modify configuration layer settings."
      zilongshanren
      (chinese :variables chinese-default-input-method 'pinyin
               chinese-enable-youdao-dict t)
+     (java :variables java-backend 'lsp)
+     (scala :variables scala-enable-eldoc t)
+     (sql :variables
+          sql-capitalize-keywords t
+          sql-auto-indent t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -114,12 +120,12 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(sicp ssh-agency anki-editor)
+   dotspacemacs-additional-packages '(org-preview-html sicp ssh-agency anki-editor)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages
-   '(org-projectile org-brain magit-gh-pulls magit-gitflow  evil-mc realgud tern company-tern
+   '(ensime org-projectile org-brain magit-gh-pulls magit-gitflow  evil-mc realgud tern company-tern
                     evil-args evil-ediff evil-exchange evil-unimpaired
                     evil-indent-plus volatile-highlights 
                     spaceline holy-mode skewer-mode rainbow-delimiters
@@ -349,7 +355,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -498,6 +504,7 @@ dump."
   )
 
 (defun dotspacemacs/user-init ()
+  
   (setq-default
    configuration-layer-elpa-archives
    '(("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
@@ -530,6 +537,25 @@ dump."
   )
 
 (defun dotspacemacs/user-config ()
+  (require 'toc-org)
+  ;; toc-org
+  (if (require 'toc-org nil t)
+      (add-hook 'org-mode-hook 'toc-org-mode)
+    (add-hook 'markdown-mode-hook 'toc-org-mode)
+    (define-key markdown-mode-map (kbd "\C-c\C-o") 'toc-org-markdown-follow-thing-at-point)
+    (warn "toc-org not found"))
+  ;;(if (require 'toc-org nil t)
+  ;;    (add-hook 'org-mode-hook 'toc-org-mode)
+  ;;  ;; enable in markdown, too
+  ;;  (add-hook 'markdown-mode-hook 'toc-org-mode)
+  ;;  (define-key markdown-mode-map (kbd "\C-c\C-o") 'toc-org-markdown-follow-thing-at-point))
+  ;;(warn "toc-org not found"))
+
+  (require 'vmd-mode)
+  (add-hook 'markdown-mode-hook 'vmd-mode)
+
+  (require 'org-tempo)
+  (paradox-enable)
 
   (setq org-agenda-start-day "-1d")
   (setq org-agenda-span 7)
@@ -542,7 +568,7 @@ dump."
   ;;解决 org 表格里面中英文对齐的问题 
   (when (configuration-layer/layer-usedp 'chinese)
     (when (and (spacemacs/system-is-mac) window-system)
-      (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 12 12)))
+      (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 12 14)))
 
 
   ;; Setting Chinese Font
@@ -553,7 +579,7 @@ dump."
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
                         charset
-                        (font-spec :family "Microsoft Yahei" :size 12))))
+                        (font-spec :family "Microsoft Yahei" :size 14))))
 
   (fset 'evil-visual-update-x-selection 'ignore)
 
@@ -666,7 +692,7 @@ dump."
   ;; (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
   (add-hook 'org-mode-hook 'emojify-mode)
-  (add-hook 'org-mode-hook 'auto-fill-mode)
+  ;; (add-hook 'org-mode-hook 'auto-fill-mode)
 
   ;; https://emacs-china.org/t/ox-hugo-auto-fill-mode-markdown/9547/4
   (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice

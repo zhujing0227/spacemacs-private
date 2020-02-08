@@ -136,7 +136,7 @@
   (interactive "P")
   (let* ((timerange-numeric-value (prefix-numeric-value timerange))
          (files (org-add-archive-files (org-agenda-files)))
-         (include-tags '("WORK" "EMACS" "DREAM" "WRITING" "MEETING" "READ"
+         (include-tags '("WORK" "EMACS" "DREAM" "WRITING" "MEETING" "READ" "PASTIME" "HOMEWORK" "LEARN"
                          "LIFE" "PROJECT" "OTHER"))
          (tags-time-alist (mapcar (lambda (tag) `(,tag . 0)) include-tags))
          (output-string "")

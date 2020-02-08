@@ -273,7 +273,7 @@ e.g. Sunday, September 17, 2000."
 
 (defun zilongshanren/pomodoro-notification ()
   "show notifications when pomodoro end"
-  (if (spacemacs/system-is-mswindows)
+  (if (spacemacs/system-is-mac)
       (progn (add-hook 'org-pomodoro-finished-hook '(lambda () (sound-wav-play (expand-file-name "~/.spacemacs.d/game_win.wav"))))
              (add-hook 'org-pomodoro-short-break-finished-hook '(lambda () (sound-wav-play (expand-file-name "~/.spacemacs.d/game_win.wav"))))
              (add-hook 'org-pomodoro-long-break-finished-hook '(lambda () (sound-wav-play (expand-file-name "~/.spacemacs.d/game_win.wav")))))
