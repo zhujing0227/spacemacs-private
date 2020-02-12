@@ -1273,12 +1273,12 @@ Search for a search tool in the order provided by `dotspacemacs-search-tools'."
                                    "Set upstream" "--set-upstream")
 
 
-        (magit-add-section-hook 'magit-status-sections-hook
-                                'magit-insert-assume-unchanged-files nil t)
+        ;; (magit-add-section-hook 'magit-status-sections-hook
+        ;;                         'magit-insert-assume-unchanged-files nil t)
 
         ;; insert the hidden files section in the magit status buffer.
-        (magit-add-section-hook 'magit-status-sections-hook
-                                'magit-insert-skip-worktree-files nil t)
+        ;; (magit-add-section-hook 'magit-status-sections-hook
+        ;;                         'magit-insert-skip-worktree-files nil t)
 
         (define-key magit-status-mode-map "ga" 'magit-jump-to-assume-unchanged)
         

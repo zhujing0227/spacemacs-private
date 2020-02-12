@@ -608,9 +608,9 @@ holding contextual information."
     :defer t
     :init (add-hook 'org-mode-hook 'org-bullets-mode)))
 
-(defun zilongshanren-org/init-doom-modeline ()
-  (use-package doom-modeline
-    :ensure t
-    :init (add-hook 'doom-modeline-mode-hook 'doom-modeline-mode)
-    ))
+;; (defun zilongshanren-org/init-doom-modeline ()
+;;   (use-package doom-modeline
+;;     :ensure t
+;;     :init (add-hook 'doom-modeline-mode-hook 'doom-modeline-mode)
+;;     ))
 ;;; packages.el ends here
