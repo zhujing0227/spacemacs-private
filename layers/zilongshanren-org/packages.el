@@ -103,7 +103,7 @@
             '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:"))
 
       (setq org-agenda-inhibit-startup t) ;; ~50x speedup
-      (setq org-agenda-span 7)
+      (setq org-agenda-span 'day)
       (setq org-agenda-use-tag-inheritance nil) ;; 3-4x speedup
       (setq org-agenda-window-setup 'current-window)
       (setq org-log-done 'note)
@@ -405,38 +405,61 @@ See `org-capture-templates' for more information."
       (defvar zilongshanren-website-html-blog-head
         " <link rel='stylesheet' href='css/site.css' type='text/css'/> \n
     <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/worg.css\"/>")
-      (setq org-publish-project-alist
-            `(
-              ("blog-notes"
-               :base-directory "~/org-notes"
-               :base-extension "org"
-               :publishing-directory "~/org-notes/public_html/"
+      (setq
+       ;; nil as default to avoid leaking sensitive info unintentionally,
+       ;; overwritten in per-project settings bellow
+       org-html-postamble nil
+       org-publish-project-alist
+       `(
+         ;; ("blog-notes"
+         ;;  :base-directory "~/zhujing0227.github.io/org"
+         ;;  :base-extension "org"
+         ;;  :publishing-directory "~/zhujing0227.github.io/public_html/"
+         ;;  :recursive t
+         ;;  :html-head , zilongshanren-website-html-blog-head
+         ;;  :publishing-function org-html-publish-to-html
+         ;;  :headline-levels 4       ; Just the default for this project.
+         ;;  :auto-preamble t
+         ;;  :exclude "gtd.org"
+         ;;  :exclude-tags ("ol" "noexport")
+         ;;  :section-numbers nil
+         ;;  :html-preamble ,zilongshanren-website-html-preamble
+         ;;  :author "zhujing0227"
+         ;;  :email "zhujing0227@gmail.com"
+         ;;  :auto-sitemap t          ; Generate sitemap.org automagically...
+         ;;  :sitemap-filename "index.org" ; ... call it sitemap.org (it's the default)...
+         ;;  :sitemap-title "我的wiki"     ; ... with title 'Sitemap'.
+         ;;  :sitemap-sort-files anti-chronologically
+         ;;  :sitemap-file-entry-format "%t" ; %d to output date, we don't need date here
+         ;;  )
+         ;; ("blog-static"
+         ;;  :base-directory "~/zhujing0227.github.io/org"
+         ;;  :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+         ;;  :publishing-directory "~/zhujing0227.github.io/public_html/"
+         ;;  :recursive t
+         ;;  :publishing-function org-publish-attachment
+         ;;  )
+         ;; https://lgfang.github.io/computer/2015/11/02/org-mode-github-pages
+         ;; https://orgmode.org/worg/org-tutorials/org-publish-html-tutorial.org.html
+         ("blog-attachments"
+          :base-directory "~/zhujing0227.github.io/org"
+          :base-extension "png\\|jpg"
+          :recursive t
+          :publishing-directory "~/zhujing0227.github.io/images"
+          :publishing-function org-publish-attachment)
 
-               :recursive t
-               :html-head , zilongshanren-website-html-blog-head
-               :publishing-function org-html-publish-to-html
-               :headline-levels 4       ; Just the default for this project.
-               :auto-preamble t
-               :exclude "gtd.org"
-               :exclude-tags ("ol" "noexport")
-               :section-numbers nil
-               :html-preamble ,zilongshanren-website-html-preamble
-               :author "zhujing0227"
-               :email "zhujing0227@gmail.com"
-               :auto-sitemap t          ; Generate sitemap.org automagically...
-               :sitemap-filename "index.org" ; ... call it sitemap.org (it's the default)...
-               :sitemap-title "我的wiki"     ; ... with title 'Sitemap'.
-               :sitemap-sort-files anti-chronologically
-               :sitemap-file-entry-format "%t" ; %d to output date, we don't need date here
-               )
-              ("blog-static"
-               :base-directory "~/org-notes"
-               :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-               :publishing-directory "~/org-notes/public_html/"
-               :recursive t
-               :publishing-function org-publish-attachment
-               )
-              ("blog" :components ("blog-notes" "blog-static"))))
+         ("blog-notes"
+          :base-directory "~/zhujing0227.github.io/org/"
+          :base-extension "org"
+          :recursive t
+          :exclude-tags ("TOC")
+          :publishing-directory "~/zhujing0227.github.io/_posts"
+          :publishing-function org-md-publish-to-md
+          :auto-sitemap nil
+          :html-link-use-abs-url t
+          )
+         ("blog" :components ("blog-notes" "blog-attachments")))
+       )
 
 
 

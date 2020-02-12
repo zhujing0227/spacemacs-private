@@ -34,7 +34,7 @@ This function should only modify configuration layer settings."
      (ivy :variables ivy-enable-advanced-buffer-information nil)
      better-defaults
      ranger
-     emoji
+     ;; emoji
      (plantuml :variables plantuml-jar-path "~/.spacemacs.d/plantuml.jar")
      ;; lsp
      ;; dap
@@ -130,7 +130,7 @@ This function should only modify configuration layer settings."
                     evil-indent-plus volatile-highlights 
                     spaceline holy-mode skewer-mode rainbow-delimiters
                     highlight-indentation vi-tilde-fringe eyebrowse ws-butler
-                    smooth-scrolling org-repo-todo org-download org-timer
+                    smooth-scrolling org-repo-todo org-download  org-timer
                     livid-mode git-gutter git-gutter-fringe  evil-escape
                     leuven-theme gh-md evil-lisp-state spray lorem-ipsum symon
                     ac-ispell ace-jump-mode auto-complete auto-dictionary
@@ -252,6 +252,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(solarized-dark
+                         spacemacs-dark
                          solarized-light)
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -557,8 +558,8 @@ dump."
   (require 'org-tempo)
   (paradox-enable)
 
-  (setq org-agenda-start-day "-1d")
-  (setq org-agenda-span 7)
+  (setq org-agenda-start-day "1d")
+  ;; (setq org-agenda-span 7)
   (setq org-agenda-start-on-weekday nil)
   
   ;; https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-org-mode/
@@ -691,11 +692,11 @@ dump."
                           'gbk))
   ;; (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
-  (add-hook 'org-mode-hook 'emojify-mode)
+  ;; (add-hook 'org-mode-hook 'emojify-mode)
   ;; (add-hook 'org-mode-hook 'auto-fill-mode)
 
   ;; https://emacs-china.org/t/ox-hugo-auto-fill-mode-markdown/9547/4
-  (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice
+   (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice
                                         (paragraph contents info) activate)
     "Join consecutive Chinese lines into a single long line without
 unwanted space when exporting org-mode to hugo markdown."
