@@ -124,7 +124,9 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(window-numbering eyebrowse keyfreq org-preview-html sicp ssh-agency anki-editor)
+   dotspacemacs-additional-packages '(window-numbering
+                                                       eyebrowse keyfreq
+                                                       org-preview-html sicp  ssh-agency anki-editor)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -230,7 +232,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'random
+   dotspacemacs-startup-banner 'official
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -315,7 +317,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
 
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
@@ -540,6 +542,14 @@ dump."
   )
 
 (defun dotspacemacs/user-config ()
+    
+  (setq-default auto-fill-function 'do-auto-fill)
+  ;; global fci mode
+  ;; https://stackoverflow.com/questions/25168912/how-to-enable-fill-column-indicator-on-startup
+  (setq fci-column 120)
+  (define-globalized-minor-mode my-global-fci-mode fci-mode turn-on-fci-mode)
+  (my-global-fci-mode 1)
+  
   (require 'window-numbering)
   (window-numbering-mode 1)
 
@@ -554,7 +564,6 @@ dump."
           mwheel-scroll
           up down left right))
   
-  (setq fill-column 120)
   (require 'toc-org)
   ;; toc-org
   (if (require 'toc-org nil t)
@@ -594,10 +603,6 @@ dump."
                         (font-spec :family "Microsoft Yahei" :size 14))))
 
   (fset 'evil-visual-update-x-selection 'ignore)
-
-  ;; force horizontal split window
-  (setq split-width-threshold 120)
-  ;; (linum-relative-on)
 
   (spacemacs|add-company-backends :modes text-mode)
 
@@ -856,9 +861,7 @@ dump."
                           'gbk))
   ;; (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
-  ;; (add-hook 'org-mode-hook 'emojify-mode)
-  ;; (add-hook 'org-mode-hook 'auto-fill-mode)
-
+  (add-hook 'org-mode-hook 'org-indent-mode)
   ;; https://emacs-china.org/t/ox-hugo-auto-fill-mode-markdown/9547/4
   (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice
                                         (paragraph contents info) activate)
