@@ -29,6 +29,16 @@
  '(helm-follow-mode-persistent t)
  '(helm-move-to-line-cycle-in-source t)
  '(ivy-height 18)
+ '(ivy-initial-inputs-alist
+   (quote
+    ((counsel-minor . "^+")
+     (counsel-package . "+")
+     (counsel-org-capture . "^")
+     (counsel-M-x . "^")
+     (counsel-describe-function . "^")
+     (counsel-describe-variable . "^"))))
+ '(keyfreq-file "~/.spacemacs.d/.emacs.keyfreq")
+ '(keyfreq-file-lock "~/.spacemacs.d/.emacs.keyfreq.lock")
  '(lsp-ui-flycheck-live-reporting nil)
  '(lua-documentation-url "http://www.lua.org/manual/5.3/manual.html")
  '(magit-use-overlays nil)

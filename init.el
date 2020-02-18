@@ -54,7 +54,12 @@ This function should only modify configuration layer settings."
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; (vinegar :variables vinegar-reuse-dired-buffer t)
      (spacemacs-layouts :variables layouts-enable-autosave nil
-                        layouts-autosave-delay 300)
+                        layouts-autosave-delay 300
+                        spacemacs-layouts-restricted-functions
+                        '(spacemacs/window-split-double-columns
+                          spacemacs/window-split-triple-columns
+                          spacemacs/window-split-grid))
+     spacemacs-modeline
      (git :variables
           git-magit-status-fullscreen t
           magit-push-always-verify nil
@@ -120,7 +125,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(org-preview-html sicp ssh-agency anki-editor)
+   dotspacemacs-additional-packages '(eyebrowse keyfreq org-preview-html sicp ssh-agency anki-editor)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -129,7 +134,7 @@ This function should only modify configuration layer settings."
                     evil-args evil-ediff evil-exchange evil-unimpaired
                     evil-indent-plus volatile-highlights 
                     spaceline holy-mode skewer-mode rainbow-delimiters
-                    highlight-indentation vi-tilde-fringe eyebrowse ws-butler
+                    highlight-indentation vi-tilde-fringe ws-butler
                     smooth-scrolling org-repo-todo org-download  org-timer
                     livid-mode git-gutter git-gutter-fringe  evil-escape
                     leuven-theme gh-md evil-lisp-state spray lorem-ipsum symon
@@ -261,8 +266,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(doom)
-   ;; dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
 
@@ -308,7 +312,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the default layout name is displayed in the mode-line.
    ;; (default nil)
-   dotspacemacs-display-default-layout t
+   dotspacemacs-display-default-layout nil
 
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
@@ -506,6 +510,7 @@ dump."
   )
 
 (defun dotspacemacs/user-init ()
+  (turn-on-fci-mode)
   
   (setq-default
    configuration-layer-elpa-archives
@@ -525,7 +530,7 @@ dump."
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 
   ;; ss proxy. But it will cause anacond-mode failed.
-  (setq socks-server '("Default server" "127.0.0.1" 1086 5))
+  ;; (setq socks-server '("Default server" "127.0.0.1" 1086 5))
   (setq evil-shift-round nil)
   (setq byte-compile-warnings '(not obsolete))
   (setq warning-minimum-level :error)
@@ -534,11 +539,21 @@ dump."
   (setq-default quelpa-build-tar-executable "/usr/local/bin/gtar")
   ;; hack for remove purpose mode
   ;; (setq purpose-mode nil)
-  ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  ;; (setq doom-modeline-mode 1)
   )
 
 (defun dotspacemacs/user-config ()
+  ;; 统计常用命令
+  (require 'keyfreq)
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  (setq keyfreq-excluded-commands
+        '(self-insert-command
+          forward-char backward-char previous-line next-line
+          mouse-set-point mouse-set-region evil-mouse-drag-region
+          mwheel-scroll
+          up down left right))
+  
+  (setq fill-column 120)
   (require 'toc-org)
   ;; toc-org
   (if (require 'toc-org nil t)
@@ -546,13 +561,7 @@ dump."
     (add-hook 'markdown-mode-hook 'toc-org-mode)
     (define-key markdown-mode-map (kbd "\C-c\C-o") 'toc-org-markdown-follow-thing-at-point)
     (warn "toc-org not found"))
-  ;;(if (require 'toc-org nil t)
-  ;;    (add-hook 'org-mode-hook 'toc-org-mode)
-  ;;  ;; enable in markdown, too
-  ;;  (add-hook 'markdown-mode-hook 'toc-org-mode)
-  ;;  (define-key markdown-mode-map (kbd "\C-c\C-o") 'toc-org-markdown-follow-thing-at-point))
-  ;;(warn "toc-org not found"))
-
+  
   (require 'vmd-mode)
   (add-hook 'markdown-mode-hook 'vmd-mode)
 
@@ -697,7 +706,7 @@ dump."
   ;; (add-hook 'org-mode-hook 'auto-fill-mode)
 
   ;; https://emacs-china.org/t/ox-hugo-auto-fill-mode-markdown/9547/4
-   (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice
+  (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice
                                         (paragraph contents info) activate)
     "Join consecutive Chinese lines into a single long line without
 unwanted space when exporting org-mode to hugo markdown."
