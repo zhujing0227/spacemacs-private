@@ -542,6 +542,8 @@ dump."
   )
 
 (defun dotspacemacs/user-config ()
+  (setq org-image-actual-width '(300))
+  ;; (setq org-image-actual-width (/ (display-pixel-width) 3))
     
   (setq-default auto-fill-function 'do-auto-fill)
   ;; global fci mode
@@ -861,6 +863,7 @@ dump."
                           'gbk))
   ;; (add-hook 'text-mode-hook 'spacemacs/toggle-spelling-checking-on)
 
+  ;; (add-hook 'git-commit-mode-hook (lambda () (save-selected-window (magit-process))))
   (add-hook 'org-mode-hook 'org-indent-mode)
   ;; https://emacs-china.org/t/ox-hugo-auto-fill-mode-markdown/9547/4
   (defadvice org-hugo-paragraph (before org-hugo-paragraph-advice
