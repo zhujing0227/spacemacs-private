@@ -1,4 +1,4 @@
 .DS_Store
 /layers/zilongshanren-misc/.DS_Store
 /.spacemacs.env
-/.emacs.keyfreq
+.emacs.keyfreq
