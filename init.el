@@ -522,6 +522,8 @@ dump."
    org-agenda-start-with-follow-mode t
    )
 
+  ;; 禁用下划线转义
+  (setq-default org-use-sub-superscripts nil)
   
   (setq term-char-mode-point-at-process-mark nil)
 
